@@ -1,60 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interview with Customs Officer</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<div class="player">
 
-<body>
+    <div class="controls">
 
-<div class="card">
-
-    <img class="map" src="map.jpg" alt="Map">
-
-    <h1>Interview with Customs Officer</h1>
-
-    <audio id="audio" src="interview.mp3"></audio>
-
-    <div class="player">
-
-        <button id="back">↺ 10</button>
+        <button id="back">◀</button>
 
         <button id="play" class="play">
             ▶
         </button>
 
-        <button id="forward">10 ↻</button>
-
-        <div class="time">
-            <span id="current">0:00</span>
-            <input type="range" id="progress" value="0">
-            <span id="duration">0:00</span>
-        </div>
-
-        <button id="volume">🔊</button>
+        <button id="forward">▶</button>
 
     </div>
 
 
-    <div class="buttons">
+    <div class="time">
 
-        <a href="interview.mp3" download>
-            ⬇ Download
-        </a>
+        <span id="current">0:00</span>
 
-        <button id="share">
-            📤 Share
-        </button>
+        <input type="range" id="progress" value="0">
+
+        <span id="duration">0:00</span>
 
     </div>
 
+
+    <button id="volume">
+        🔊
+    </button>
 
 </div>
-
-
-<script src="script.js"></script>
-
-</body>
-</html>
