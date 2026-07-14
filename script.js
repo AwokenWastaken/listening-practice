@@ -1,27 +1,95 @@
 const audio = document.getElementById("audio");
-
-const play = document.getElementById("play");
-
+const playButton = document.getElementById("play");
 const progress = document.getElementById("progress");
-
-const current = document.getElementById("current");
-
+const currentTime = document.getElementById("current");
 const duration = document.getElementById("duration");
+const volumeButton = document.getElementById("volume");
 
 
-play.onclick = () => {
+// PLAY / PAUSE
+playButton.addEventListener("click", () => {
 
-    if(audio.paused){
-
+    if (audio.paused) {
         audio.play();
+        playButton.innerHTML = "⏸";
+    } else {
+        audio.pause();
+        playButton.innerHTML = "▶";
+    }
 
-        play.innerHTML="⏸";
+});
+
+
+// LOAD AUDIO LENGTH
+audio.addEventListener("loadedmetadata", () => {
+    duration.textContent = formatTime(audio.duration);
+});
+
+
+// UPDATE BAR
+audio.addEventListener("timeupdate", () => {
+
+    if (!isNaN(audio.duration)) {
+
+        progress.value =
+        (audio.currentTime / audio.duration) * 100;
+
+        currentTime.textContent =
+        formatTime(audio.currentTime);
+    }
+
+});
+
+
+// MOVE THROUGH AUDIO
+progress.addEventListener("input", () => {
+
+    audio.currentTime =
+    (progress.value / 100) * audio.duration;
+
+});
+
+
+// BACK 10 SECONDS
+document.getElementById("back").onclick = () => {
+
+    audio.currentTime -= 10;
+
+};
+
+
+// FORWARD 10 SECONDS
+document.getElementById("forward").onclick = () => {
+
+    audio.currentTime += 10;
+
+};
+
+
+// MUTE
+volumeButton.onclick = () => {
+
+    audio.muted = !audio.muted;
+
+    volumeButton.innerHTML =
+    audio.muted ? "🔇" : "🔊";
+
+};
+
+
+// SHARE
+document.getElementById("share").onclick = async () => {
+
+    if (navigator.share) {
+
+        await navigator.share({
+            title:"Interview with Customs Officer",
+            url:window.location.href
+        });
 
     } else {
 
-        audio.pause();
-
-        play.innerHTML="▶";
+        alert("Copy this link: " + window.location.href);
 
     }
 
@@ -29,79 +97,22 @@ play.onclick = () => {
 
 
 
-audio.addEventListener("loadedmetadata",()=>{
-
-    duration.innerHTML=formatTime(audio.duration);
-
-});
-
-
-audio.addEventListener("timeupdate",()=>{
-
-    progress.value =
-    (audio.currentTime/audio.duration)*100;
-
-    current.innerHTML =
-    formatTime(audio.currentTime);
-
-});
-
-
-
-progress.oninput=()=>{
-
-    audio.currentTime =
-    (progress.value/100)*audio.duration;
-
-};
-
-
-
-document.getElementById("back").onclick=()=>{
-
-    audio.currentTime-=10;
-
-};
-
-
-document.getElementById("forward").onclick=()=>{
-
-    audio.currentTime+=10;
-
-};
-
-
-
-document.getElementById("volume").onclick=()=>{
-
-    audio.muted=!audio.muted;
-
-};
-
-
-
-document.getElementById("share").onclick=()=>{
-
-    navigator.share({
-
-        title:"Interview with Customs Officer",
-
-        url:window.location.href
-
-    });
-
-};
-
-
-
 function formatTime(seconds){
 
-    let min=Math.floor(seconds/60);
+    if(isNaN(seconds)){
+        return "0:00";
+    }
 
-    let sec=Math.floor(seconds%60);
+    let minutes =
+    Math.floor(seconds / 60);
 
-    if(sec<10) sec="0"+sec;
+    let secondsLeft =
+    Math.floor(seconds % 60);
 
-    return min+":"+sec;
+    if(secondsLeft < 10){
+        secondsLeft="0"+secondsLeft;
+    }
+
+    return minutes + ":" + secondsLeft;
 
 }
