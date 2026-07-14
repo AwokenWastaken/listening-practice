@@ -1,95 +1,118 @@
 const audio = document.getElementById("audio");
-const playButton = document.getElementById("play");
+
+const play = document.getElementById("play");
+
+const back = document.getElementById("back");
+
+const forward = document.getElementById("forward");
+
+const volume = document.getElementById("volume");
+
 const progress = document.getElementById("progress");
-const currentTime = document.getElementById("current");
+
+const current = document.getElementById("current");
+
 const duration = document.getElementById("duration");
-const volumeButton = document.getElementById("volume");
 
 
-// PLAY / PAUSE
-playButton.addEventListener("click", () => {
 
-    if (audio.paused) {
+play.onclick = function(){
+
+    if(audio.paused){
+
         audio.play();
-        playButton.innerHTML = "⏸";
-    } else {
+
+        play.innerHTML="⏸";
+
+    }
+
+    else{
+
         audio.pause();
-        playButton.innerHTML = "▶";
+
+        play.innerHTML="▶";
+
     }
 
-});
+};
 
 
-// LOAD AUDIO LENGTH
-audio.addEventListener("loadedmetadata", () => {
-    duration.textContent = formatTime(audio.duration);
-});
+
+audio.onloadedmetadata = function(){
+
+    duration.innerHTML =
+    time(audio.duration);
+
+};
 
 
-// UPDATE BAR
-audio.addEventListener("timeupdate", () => {
 
-    if (!isNaN(audio.duration)) {
+audio.ontimeupdate = function(){
 
-        progress.value =
-        (audio.currentTime / audio.duration) * 100;
-
-        currentTime.textContent =
-        formatTime(audio.currentTime);
-    }
-
-});
+    progress.value =
+    (audio.currentTime / audio.duration) * 100;
 
 
-// MOVE THROUGH AUDIO
-progress.addEventListener("input", () => {
+    current.innerHTML =
+    time(audio.currentTime);
+
+};
+
+
+
+progress.oninput=function(){
 
     audio.currentTime =
     (progress.value / 100) * audio.duration;
 
-});
+};
 
 
-// BACK 10 SECONDS
-document.getElementById("back").onclick = () => {
+
+back.onclick=function(){
 
     audio.currentTime -= 10;
 
 };
 
 
-// FORWARD 10 SECONDS
-document.getElementById("forward").onclick = () => {
+
+forward.onclick=function(){
 
     audio.currentTime += 10;
 
 };
 
 
-// MUTE
-volumeButton.onclick = () => {
+
+volume.onclick=function(){
 
     audio.muted = !audio.muted;
 
-    volumeButton.innerHTML =
+    volume.innerHTML =
     audio.muted ? "🔇" : "🔊";
 
 };
 
 
-// SHARE
-document.getElementById("share").onclick = async () => {
 
-    if (navigator.share) {
+document.getElementById("share").onclick=function(){
 
-        await navigator.share({
+    if(navigator.share){
+
+        navigator.share({
+
             title:"Interview with Customs Officer",
+
             url:window.location.href
+
         });
 
-    } else {
+    }
 
-        alert("Copy this link: " + window.location.href);
+    else{
+
+        alert(window.location.href);
 
     }
 
@@ -97,22 +120,30 @@ document.getElementById("share").onclick = async () => {
 
 
 
-function formatTime(seconds){
+function time(seconds){
 
     if(isNaN(seconds)){
+
         return "0:00";
+
     }
 
-    let minutes =
-    Math.floor(seconds / 60);
 
-    let secondsLeft =
-    Math.floor(seconds % 60);
+    let min =
+    Math.floor(seconds/60);
 
-    if(secondsLeft < 10){
-        secondsLeft="0"+secondsLeft;
+
+    let sec =
+    Math.floor(seconds%60);
+
+
+    if(sec < 10){
+
+        sec="0"+sec;
+
     }
 
-    return minutes + ":" + secondsLeft;
+
+    return min+":"+sec;
 
 }
